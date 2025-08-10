@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Código de Verificação</title>
+    <style>
+        /* Reset e estilos base */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            min-width: 100%;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+        
+        /* Container principal */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        /* Cabeçalho */
+        .header {
+            background-color: #000000;
+            color: #ffffff;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+        
+        /* Conteúdo principal */
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .greeting {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #333333;
+        }
+        
+        .message {
+            font-size: 16px;
+            margin-bottom: 30px;
+            color: #555555;
+            line-height: 1.5;
+        }
+        
+        /* Código de verificação */
+        .verification-code {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .code-label {
+            font-size: 14px;
+            color: #666666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+        
+        .code {
+            font-size: 32px;
+            font-weight: 700;
+            color: #000000;
+            letter-spacing: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+        }
+        
+        .code-info {
+            font-size: 14px;
+            color: #666666;
+            margin-top: 15px;
+        }
+        
+        /* Informações adicionais */
+        .additional-info {
+            background-color: #f8f9fa;
+            border-left: 4px solid #000000;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .additional-info p {
+            font-size: 14px;
+            color: #555555;
+            margin: 0 0 10px 0;
+        }
+        
+        .additional-info p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Rodapé */
+        .footer {
+            background-color: #f8f9fa;
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .footer p {
+            font-size: 12px;
+            color: #666666;
+            margin: 0 0 10px 0;
+        }
+        
+        .footer p:last-child {
+            margin-bottom: 0;
+        }
+        
+        /* Media queries para responsividade */
+        @media only screen and (max-width: 600px) {
+            .email-container {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                border-radius: 0 !important;
+            }
+            
+            .header {
+                padding: 25px 15px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .greeting {
+                font-size: 16px;
+            }
+            
+            .message {
+                font-size: 15px;
+            }
+            
+            .verification-code {
+                padding: 20px 15px;
+                margin: 25px 0;
+            }
+            
+            .code {
+                font-size: 28px;
+                letter-spacing: 4px;
+            }
+            
+            .additional-info {
+                padding: 15px;
+                margin: 25px 0;
+            }
+            
+            .footer {
+                padding: 25px 15px;
+            }
+        }
+        
+        @media only screen and (max-width: 480px) {
+            .code {
+                font-size: 24px;
+                letter-spacing: 2px;
+            }
+            
+            .header h1 {
+                font-size: 18px;
+            }
+            
+            .greeting {
+                font-size: 15px;
+            }
+            
+            .message {
+                font-size: 14px;
+            }
+        }
+        
+        /* Fallback para clientes de email antigos */
+        .mso-hide {
+            mso-hide: all;
+        }
+        
+        /* Dark mode support */
+        @media (prefers-color-scheme: dark) {
+            .email-container {
+                background-color: #ffffff !important;
+            }
+            
+            .content,
+            .verification-code,
+            .additional-info,
+            .footer {
+                background-color: #ffffff !important;
+                color: #333333 !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Cabeçalho -->
+        <div class="header">
+            <h1>Verificação de Conta</h1>
+        </div>
+        
+        <!-- Conteúdo Principal -->
+        <div class="content">
+            <div class="greeting">
+                Olá, {{nome}}!
+            </div>
+            
+            <div class="message">
+                Recebemos uma solicitação para verificar o endereço de e-mail <strong>{{email}}</strong>. 
+                Para continuar, utilize o código de verificação abaixo:
+            </div>
+            
+            <!-- Código de Verificação -->
+            <div class="verification-code">
+                <div class="code-label">Seu código de verificação</div>
+                <div class="code">{{code}}</div>
+            </div>
+            
+            <!-- Informações Adicionais -->
+            <div class="additional-info">
+                <p><strong>Importante:</strong></p>
+                <p>• Este código é válido apenas para uma única utilização</p>
+                <p>• Não compartilhe este código com terceiros</p>
+                <p>• Se você não solicitou esta verificação, ignore este e-mail</p>
+            </div>
+            
+            <div class="message">
+                Se você está tendo problemas ou não solicitou esta verificação, 
+                entre em contato conosco imediatamente.
+            </div>
+        </div>
+        
+        <!-- Rodapé -->
+        <div class="footer">
+            <p>Este é um e-mail automático, não responda a esta mensagem.</p>
+            <p>&copy; 2025 {{sender}}. Todos os direitos reservados.</p>
+        </div>
+    </div>
+</body>
+</html>

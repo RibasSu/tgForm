@@ -1,0 +1,32 @@
+{
+  "startMessage": "Olá! Preencha o formulário para participar do lançamento do Chat 0ms.",
+  "name": "Formulário de Inscrição - Chat 0ms",
+  "allowMultipleSubmissions": false,
+  "fields": [
+    {
+      "name": "nome",
+      "label": "Qual é o seu nome completo?",
+      "type": "text",
+      "regex": "^[A-Za-zÀ-ÿ'\\- ]{3,}$",
+      "regexMessage": "❌ Digite um nome válido (apenas letras e espaços, mínimo 3 caracteres)."
+    },
+    {
+      "name": "telefone",
+      "label": "Qual é o seu telefone? (formato: 11999999999)",
+      "type": "text",
+      "regex": "^\\d{2}9\\d{8}$",
+      "regexMessage": "❌ Telefone inválido. Use o formato 11999999999."
+    },
+    {
+      "name": "email",
+      "label": "Qual é o seu e-mail?",
+      "type": "email",
+      "verifyCode": true
+    },
+    {
+      "name": "empresa",
+      "label": "Qual é o nome da sua empresa (ou escreva 'não tenho')?",
+      "type": "text"
+    }
+  ]
+}
