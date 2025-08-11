@@ -1,0 +1,17 @@
+{
+  "pt-BR": {
+    "translation": {
+      "alreadyFilled": "Você já preencheu este formulário.",
+      "invalidEmail": "❌ E-mail inválido. Tente novamente.",
+      "checkingEmail": "🔍 Verificando e-mail...",
+      "invalidOrTempEmail": "❌ E-mail inválido ou temporário. Tente outro.",
+      "codeSent": "📩 Um código de verificação foi enviado para seu e-mail. Digite o código para confirmar.",
+      "codeWrong": "❌ Código incorreto. Tente novamente.",
+      "codeVerified": "✅ E-mail verificado!",
+      "thanks": "✅ Obrigado! Você foi inscrito com sucesso.",
+      "codeSendError": "❌ Não foi possível enviar o código de verificação. Tente novamente mais tarde.",
+      "internalRegex": "⚠️ Erro interno: regex inválida no campo do formulário.",
+      "invalidValue": "❌ Valor inválido. Tente novamente."
+    }
+  }
+}

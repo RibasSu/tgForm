@@ -1,8 +1,8 @@
-// bot.js
 const TelegramBot = require("node-telegram-bot-api");
 const fs = require("fs");
 const axios = require("axios");
 const { Resend } = require("resend");
+const LiveTranslator = require("./live-translator");
 require("dotenv").config();
 
 // ====== CONFIGURAÇÕES ======
@@ -15,6 +15,13 @@ if (fs.existsSync(DATA_FILE)) {
   inscritos = JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
 }
 const form = JSON.parse(fs.readFileSync(FORM_FILE, "utf8"));
+
+
+// Inicializa o LiveTranslator
+const translator = new LiveTranslator({
+  localesDir: __dirname + "/locales",
+  defaultLang: "pt-BR"
+});
 
 // Inicializa bot
 const bot = new TelegramBot(TOKEN, { polling: true });
@@ -52,7 +59,7 @@ async function enviarCodigoEmail(email, code, userAnswers = {}) {
   let html = null;
   let text = `Seu código de verificação é: ${code}`;
   try {
-    if (fs.existsSync("email-template.html")) {
+    if (fs.existsSync("./email-templates/verification.html")) {
       const template = fs.readFileSync("./email-templates/verification.html", "utf8");
       // Variáveis disponíveis para o template
       const variables = {
@@ -81,10 +88,10 @@ function jaPreencheu(chatId) {
   return inscritos.some((i) => i.telegramId === chatId);
 }
 
-bot.onText(/\/start/, (msg) => {
+bot.onText(/\/start/, async (msg) => {
   const chatId = msg.chat.id;
   if (!form.allowMultipleSubmissions && jaPreencheu(chatId)) {
-    bot.sendMessage(chatId, "Você já preencheu este formulário.");
+    bot.sendMessage(chatId, translator.t("alreadyFilled"));
     return;
   }
   bot.sendMessage(chatId, form.startMessage);
@@ -103,12 +110,12 @@ bot.on("message", async (msg) => {
   // Primeiro, verifica se está aguardando código de verificação
   if (state.awaitingCode) {
     if (text !== state.codigo) {
-      bot.sendMessage(chatId, "❌ Código incorreto. Tente novamente.");
+      bot.sendMessage(chatId, translator.t("codeWrong"));
       return;
     }
 
     state.awaitingCode = false;
-    bot.sendMessage(chatId, "✅ E-mail verificado!");
+    bot.sendMessage(chatId, translator.t("codeVerified"));
 
     // Espera 1 segundo
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -123,7 +130,7 @@ bot.on("message", async (msg) => {
         data: new Date().toISOString(),
       });
       fs.writeFileSync(DATA_FILE, JSON.stringify(inscritos, null, 2));
-      bot.sendMessage(chatId, "✅ Obrigado! Você foi inscrito com sucesso.");
+      bot.sendMessage(chatId, translator.t("thanks"));
       delete userState[chatId];
     }
     return;
@@ -138,17 +145,11 @@ bot.on("message", async (msg) => {
     try {
       regex = new RegExp(field.regex);
     } catch (e) {
-      bot.sendMessage(
-        chatId,
-        "⚠️ Erro interno: regex inválida no campo do formulário."
-      );
+      bot.sendMessage(chatId, translator.t("internalRegex"));
       return;
     }
     if (!regex.test(text)) {
-      bot.sendMessage(
-        chatId,
-        field.regexMessage || "❌ Valor inválido. Tente novamente."
-      );
+      bot.sendMessage(chatId, field.regexMessage || translator.t("invalidValue"));
       return;
     }
   }
@@ -156,13 +157,13 @@ bot.on("message", async (msg) => {
   // Validação de tipos
   if (field.type === "email") {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text)) {
-      bot.sendMessage(chatId, "❌ E-mail inválido. Tente novamente.");
+      bot.sendMessage(chatId, translator.t("invalidEmail"));
       return;
     }
-    bot.sendMessage(chatId, "🔍 Verificando e-mail...");
+    bot.sendMessage(chatId, translator.t("checkingEmail"));
     const valido = await validarEmailDisify(text);
     if (!valido) {
-      bot.sendMessage(chatId, "❌ E-mail inválido ou temporário. Tente outro.");
+      bot.sendMessage(chatId, translator.t("invalidOrTempEmail"));
       console.log(`E-mail inválido: ${text}`);
       return;
     }
@@ -177,19 +178,13 @@ bot.on("message", async (msg) => {
         state.answers
       );
       if (!enviado) {
-        bot.sendMessage(
-          chatId,
-          "❌ Não foi possível enviar o código de verificação. Tente novamente mais tarde."
-        );
+        bot.sendMessage(chatId, translator.t("codeSendError"));
         delete userState[chatId];
         return;
       }
       state.awaitingCode = true;
       // Não avança o step ainda, só depois do código correto
-      bot.sendMessage(
-        chatId,
-        "📩 Um código de verificação foi enviado para seu e-mail. Digite o código para confirmar."
-      );
+      bot.sendMessage(chatId, translator.t("codeSent"));
       return;
     }
   } else {
@@ -208,7 +203,7 @@ bot.on("message", async (msg) => {
       data: new Date().toISOString(),
     });
     fs.writeFileSync(DATA_FILE, JSON.stringify(inscritos, null, 2));
-    bot.sendMessage(chatId, "✅ Obrigado! Você foi inscrito com sucesso.");
+    bot.sendMessage(chatId, translator.t("thanks"));
     delete userState[chatId];
   }
 });
